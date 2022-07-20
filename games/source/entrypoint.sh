@@ -41,7 +41,11 @@ aws configure set default.output json
 
 echo "aws s3 sync /home/container/steamapps s3://entasy-project-zomboid" > /home/container/aws-cron
 
-echo "*/5 * * * * root /bin/sh /home/container/aws-cron\necho \"${DATE} > /home/container/aws-cron-timestamp\"" > /etc/cron.d/aws-cron
+echo "*/5 * * * * root /bin/sh /home/container/aws-cron\necho \"${DATE} > /home/container/aws-cron-timestamp\"" >> /etc/crontab
+
+if [ "${DEBUG}" == "true" ]; then
+    cat /etc/crontab
+fi
 
 # Switch to the container's working directory
 cd /home/container || exit 1

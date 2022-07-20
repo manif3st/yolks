@@ -39,6 +39,10 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
+echo "aws s3 sync steamapps s3://entasy-project-zomboid" > /home/container/aws-cron
+
+echo */5 * * * * root /bin/sh /home/container/aws-cron
+
 # Switch to the container's working directory
 cd /home/container || exit 1
 

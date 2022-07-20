@@ -33,6 +33,12 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
+# Create AWS config
+aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+aws configure set default.region ${AWS_REGION}
+aws configure set default.output json
+
 # Switch to the container's working directory
 cd /home/container || exit 1
 

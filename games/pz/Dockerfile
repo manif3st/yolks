@@ -33,9 +33,14 @@ RUN         dpkg --add-architecture i386 \
 				&& apt update \
 				&& apt upgrade -y \
 				&& apt install -y tar curl gcc g++ lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 iproute2 gdb libsdl1.2debian libfontconfig1 telnet net-tools netcat tzdata awscli cron zip \
-				&& useradd -m -d /home/container container
+				&& useradd -m -d /home/container container \
+				&& addgroup crond-users \
+				&& chgrp crond-users /var/run/crond.pid \
+				&& usermod -a -G crond-users container
 
 ADD			cron /etc/cron.d/cron
+RUN 		chmod 0644 /etc/cron.d/cron
+RUN 		crontab /etc/cron.d/cron
 
 USER        container
 ENV         USER=container HOME=/home/container

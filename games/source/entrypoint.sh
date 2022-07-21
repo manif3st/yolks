@@ -39,7 +39,7 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
-echo "aws s3 sync /home/container ${AWS_BUCKET}" > /home/container/aws-cron
+echo "aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" > /home/container/aws-cron
 
 if ! grep -Fxq "container" /etc/cron.allow; then
     echo "container" >> /etc/cron.allow;

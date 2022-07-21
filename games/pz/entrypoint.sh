@@ -49,13 +49,14 @@ if ! grep -Fxq "aws s3 sync" /home/container/cron; then
     CRON="${CRON}aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}\n"
 fi
 
-CRON="${CRON}echo \"${DATE} > /home/container/cron-timestamp\"\n"
+echo "${CRON}echo \"${DATE} > /home/container/cron-timestamp\"\n" >> /home/container/cron
+
 
 if [ "${DEBUG}" == "true" ]; then
     cat /etc/crontab
 fi
 
-echo "*/5 * * * * root /bin/sh /home/container/cron\n" >> /etc/crontab
+#echo "*/5 * * * * root /bin/sh /home/container/cron\n" >> /etc/crontab
 
 # Switch to the container's working directory
 cd /home/container || exit 1

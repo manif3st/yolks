@@ -39,9 +39,11 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
-echo "aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" > /home/container/aws-cron
-
-echo "*/5 * * * * root /bin/sh /home/container/aws-cron\necho \"${DATE} > /home/container/aws-cron-timestamp\"" >> /etc/crontab
+touch /home/container/cron
+if ! grep -Fxq "aws s3 sync" /home/container/cron; then
+    echo "aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" > /home/container/cron
+fi
+echo "*/5 * * * * root /bin/sh /home/container/cron\necho \"${DATE} > /home/container/cron-timestamp\"" >> /etc/crontab
 
 if [ "${DEBUG}" == "true" ]; then
     cat /etc/crontab

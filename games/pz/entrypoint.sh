@@ -40,7 +40,7 @@ aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
 CRON=""
-if ! [ "${BACKUP_PERIOD}" == "0"]: then
+if ! [ "${BACKUP_PERIOD}" == "0" ]; then
     CRON="${CRON}find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete\n"
 fi
 

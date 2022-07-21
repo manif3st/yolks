@@ -39,7 +39,7 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
-echo "aws s3 sync /home/container/steamapps s3://entasy-project-zomboid" > /home/container/aws-cron
+echo "aws s3 sync /home/container ${AWS_BUCKET}" > /home/container/aws-cron
 
 echo "*/5 * * * * root /bin/sh /home/container/aws-cron\necho \"${DATE} > /home/container/aws-cron-timestamp\"" >> /etc/crontab
 

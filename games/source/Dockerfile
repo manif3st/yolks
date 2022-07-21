@@ -38,6 +38,7 @@ RUN         dpkg --add-architecture i386 \
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
+RUN			echo "container" >> /etc/cron.allow;
 
 COPY        ./entrypoint.sh /entrypoint.sh
 CMD         [ "/bin/bash", "/entrypoint.sh" ]

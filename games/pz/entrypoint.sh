@@ -49,7 +49,7 @@ if ! grep -Fxq "aws s3 sync" /home/container/cron; then
     CRON="${CRON}aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}\n"
 fi
 
-echo "${CRON}echo \"${DATE} > /home/container/cron-timestamp\"\n" > /home/container/cron
+echo "${CRON}echo \"\${DATE} > /home/container/cron-timestamp\"\n" > /home/container/cron
 
 
 if [ "${DEBUG}" == "true" ]; then

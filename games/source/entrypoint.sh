@@ -39,15 +39,23 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
+CRON=""
+if ! [ "${BACKUP_PERIOD}" == "0"]: then
+    CRON="${CRON}find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete\n"
+fi;
+
 touch /home/container/cron
 if ! grep -Fxq "aws s3 sync" /home/container/cron; then
-    echo "aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" > /home/container/cron
+    CRON="${CRON}aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}\n"
 fi
-echo "*/5 * * * * root /bin/sh /home/container/cron\necho \"${DATE} > /home/container/cron-timestamp\"" >> /etc/crontab
+
+CRON="${CRON}echo \"${DATE} > /home/container/cron-timestamp\"\n"
 
 if [ "${DEBUG}" == "true" ]; then
     cat /etc/crontab
 fi
+
+echo "*/5 * * * * root /bin/sh /home/container/cron\n" >> /etc/crontab
 
 # Switch to the container's working directory
 cd /home/container || exit 1

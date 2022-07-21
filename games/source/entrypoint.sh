@@ -42,7 +42,7 @@ aws configure set default.output json
 CRON=""
 if ! [ "${BACKUP_PERIOD}" == "0"]: then
     CRON="${CRON}find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete\n"
-fi;
+fi
 
 touch /home/container/cron
 if ! grep -Fxq "aws s3 sync" /home/container/cron; then

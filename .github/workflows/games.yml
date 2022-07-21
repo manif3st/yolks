@@ -1,4 +1,4 @@
-name: build games
+name: build pz
 on:
   workflow_dispatch:
   schedule:

@@ -41,6 +41,9 @@ aws configure set default.output json
 
 echo "aws s3 sync /home/container ${AWS_BUCKET}" > /home/container/aws-cron
 
+if ! grep -Fxq "container" /etc/cron.allow; then
+    echo "container" >> /etc/cron.allow;
+fi
 echo "*/5 * * * * root /bin/sh /home/container/aws-cron\necho \"${DATE} > /home/container/aws-cron-timestamp\"" >> /etc/crontab
 
 if [ "${DEBUG}" == "true" ]; then

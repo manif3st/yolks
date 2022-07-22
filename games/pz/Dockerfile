@@ -27,20 +27,22 @@ LABEL       author="Chris Nelson" maintainer="chris@nelson.co.za"
 LABEL       org.opencontainers.image.source="https://github.com/manif3st/yolks"
 LABEL       org.opencontainers.image.licenses=MIT
 
-ENV         DEBIAN_FRONTEND=noninteractive
+ENV         DEBIAN_FRONTEND=noninteractive \
+			SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.1/supercronic-linux-amd64 \
+			SUPERCRONIC=supercronic-linux-amd64 \
+			SUPERCRONIC_SHA1SUM=d7f4c0886eb85249ad05ed592902fa6865bb9d70
 
 RUN         dpkg --add-architecture i386 \
 				&& apt update \
 				&& apt upgrade -y \
 				&& apt install -y tar curl gcc g++ lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 iproute2 gdb libsdl1.2debian libfontconfig1 telnet net-tools netcat tzdata awscli cron zip \
-				&& useradd -m -d /home/container container \
-				&& addgroup crond-users \
-				&& chgrp crond-users /var/run/crond.pid \
-				&& usermod -a -G crond-users container
+				&& useradd -m -d /home/container container
 
-ADD			cron /etc/cron.d/cron
-RUN 		chmod 0644 /etc/cron.d/cron
-RUN 		crontab /etc/cron.d/cron
+RUN 		curl -fsSLO "$SUPERCRONIC_URL" \
+				&& echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+				&& chmod +x "$SUPERCRONIC" \
+				&& mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+				&& ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
 USER        container
 ENV         USER=container HOME=/home/container

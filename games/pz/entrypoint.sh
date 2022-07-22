@@ -40,20 +40,23 @@ aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
 CRON=""
+# Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then
     CRON="${CRON}find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete\n"
 fi
 
-touch /home/container/cron
-if ! grep -Fxq "aws s3 sync" /home/container/cron; then
+# Add AWS Sync to CRON
+if [[ -z $AWS_LOCAL_SOURCE || -z $AWS_BUCKET ]]; then
+    echo "AWS Variables undefined. Not syncing."
+else
     CRON="${CRON}aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}\n"
 fi
 
-echo "${CRON}echo \"\${DATE} > /home/container/cron-timestamp\"\n" > /home/container/cron
+echo "${CRON}echo \$date > /home/container/cron-timestamp\n" > /home/container/cron
 
 
 if [ "${DEBUG}" == "true" ]; then
-    cat /etc/crontab
+    cat /home/container/cron
 fi
 
 #echo "*/5 * * * * root /bin/sh /home/container/cron\n" >> /etc/crontab

@@ -39,20 +39,22 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
-CRON=""
+# Create empty file a.
+ > /home/container/cron
+
 # Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then
-    CRON="${CRON}find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete\n"
+    CRON="find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete" >> /home/container/cron
 fi
 
 # Add AWS Sync to CRON
 if [[ -z $AWS_LOCAL_SOURCE || -z $AWS_BUCKET ]]; then
     echo "AWS Variables undefined. Not syncing."
 else
-    CRON="${CRON}aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}\n"
+    CRON="aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" >> /home/container/cron
 fi
 
-echo "${CRON}echo \$date > /home/container/cron-timestamp\n" > /home/container/cron
+echo "date > /home/container/cron-timestamp" >> /home/container/cron
 
 
 if [ "${DEBUG}" == "true" ]; then

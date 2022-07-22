@@ -56,7 +56,7 @@ fi
 
 echo "*/5 * * * * date > /home/container/cron-timestamp" >> /home/container/cron
 
-supercronic /home/container/cron
+supercronic /home/container/cron &
 
 if [ "${DEBUG}" == "true" ]; then
     cat /home/container/cron

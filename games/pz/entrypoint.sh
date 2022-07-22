@@ -44,14 +44,14 @@ aws configure set default.output json
 
 # Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then
-    CRON="*/5 * * * * find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete" >> /home/container/cron
+    echo "*/5 * * * * find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete" >> /home/container/cron
 fi
 
 # Add AWS Sync to CRON
 if [[ -z $AWS_LOCAL_SOURCE || -z $AWS_BUCKET ]]; then
     echo "AWS Variables undefined. Not syncing."
 else
-    CRON="*/5 * * * *  aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" >> /home/container/cron
+    echo "*/5 * * * *  aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" >> /home/container/cron
 fi
 
 echo "*/5 * * * * date > /home/container/cron-timestamp" >> /home/container/cron

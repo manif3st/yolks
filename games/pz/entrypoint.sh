@@ -40,7 +40,6 @@ access_key_id = ${AWS_ACCESS_KEY_ID}
 secret_access_key = ${AWS_SECRET_ACCESS_KEY}
 region = ${AWS_REGION}
 location_constraint = ${AWS_REGION}
-acl = public-read
 storage_class = STANDARD" > /home/container/.config/rclone/rclone.conf
 rclone sync --checksum -v ${AWS_LOCAL_SOURCE} remote:${AWS_BUCKET}
 

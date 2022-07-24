@@ -43,7 +43,7 @@ location_constraint = ${AWS_REGION}
 storage_class = STANDARD" > /home/container/.config/rclone/rclone.conf
 rclone sync --checksum -v ${AWS_LOCAL_SOURCE} remote:${AWS_BUCKET}
 
->> /home/container/cron
+ > /home/container/cron
 # Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then
     echo "*/5 * * * * find /home/container/.cache/backups/period -type f -mmin +${BACKUP_PERIOD} -delete" >> /home/container/cron

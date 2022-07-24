@@ -39,8 +39,19 @@ aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 aws configure set default.region ${AWS_REGION}
 aws configure set default.output json
 
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
+
 # Create empty file a.
- > /home/container/cron
+echo "[remote]
+type = s3
+provider = AWS
+access_key_id =
+secret_access_key =
+region = af-south-1
+location_constraint = af-south-1
+acl = public-read
+storage_class = STANDARD
+" > ~/.config/rclone/rclone.conf
 
 # Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then
@@ -51,7 +62,7 @@ fi
 if [[ -z $AWS_LOCAL_SOURCE || -z $AWS_BUCKET ]]; then
     echo "AWS Variables undefined. Not syncing."
 else
-    echo "*/5 * * * *  aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET} --delete" >> /home/container/cron
+    echo "*/5 * * * *  rclone sync --checksum -v ${AWS_LOCAL_SOURCE} remote:${AWS_BUCKET}" >> /home/container/cron
 fi
 
 echo "*/5 * * * * date > /home/container/cron-timestamp" >> /home/container/cron

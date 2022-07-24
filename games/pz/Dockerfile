@@ -44,6 +44,9 @@ RUN 		curl -fsSLO "$SUPERCRONIC_URL" \
 				&& mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
 				&& ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
+RUN			curl https://rclone.org/install.sh | bash
+ADD 		./rclone.conf /home/.config/rclone/rclone.conf
+
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container

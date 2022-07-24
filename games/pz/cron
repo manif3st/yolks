@@ -1,1 +1,0 @@
-*/5 * * * * container /bin/sh /home/container/cron

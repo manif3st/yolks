@@ -33,7 +33,15 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-rclone config edit region ${AWS_REGION} location_constraint ${AWS_REGION}
+echo "[remote]
+type = s3
+provider = AWS
+access_key_id =
+secret_access_key =
+region = ${AWS_REGION}
+location_constraint = ${AWS_REGION}
+acl = public-read
+storage_class = STANDARD" > /home/container/.config/rclone/rclone.conf
 rclone sync --checksum -v ${AWS_LOCAL_SOURCE} remote:${AWS_BUCKET}
 
 # Add Periodic Backup TTL

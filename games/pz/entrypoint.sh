@@ -34,10 +34,10 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # Create AWS config
-aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-aws configure set default.region ${AWS_REGION}
-aws configure set default.output json
+# aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+# aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+# aws configure set default.region ${AWS_REGION}
+# aws configure set default.output json
 
 sudo -v ; curl https://rclone.org/install.sh | sudo bash
 
@@ -47,11 +47,13 @@ type = s3
 provider = AWS
 access_key_id =
 secret_access_key =
-region = af-south-1
-location_constraint = af-south-1
+region = ${AWS_REGION}
+location_constraint = ${AWS_REGION}
 acl = public-read
 storage_class = STANDARD
 " > ~/.config/rclone/rclone.conf
+
+rclone sync --checksum -v ${AWS_LOCAL_SOURCE} remote:${AWS_BUCKET}
 
 # Add Periodic Backup TTL
 if ! [ "${BACKUP_PERIOD}" == "0" ]; then

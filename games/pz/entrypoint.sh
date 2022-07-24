@@ -51,7 +51,7 @@ fi
 if [[ -z $AWS_LOCAL_SOURCE || -z $AWS_BUCKET ]]; then
     echo "AWS Variables undefined. Not syncing."
 else
-    echo "*/5 * * * *  aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET}" >> /home/container/cron
+    echo "*/5 * * * *  aws s3 sync ${AWS_LOCAL_SOURCE} ${AWS_BUCKET} --delete" >> /home/container/cron
 fi
 
 echo "*/5 * * * * date > /home/container/cron-timestamp" >> /home/container/cron
